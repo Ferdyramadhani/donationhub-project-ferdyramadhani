@@ -3,214 +3,474 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TinyCoin Donation - Sepolia Testnet</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>DonationHub - Platform Donasi Berbasis Blockchain</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Background Elements -->
+    <div class="crypto-bg">
+        <div class="crypto-particle"></div>
+        <div class="crypto-particle"></div>
+        <div class="crypto-particle"></div>
+        <div class="crypto-particle"></div>
+        <div class="crypto-particle"></div>
+        <div class="blockchain-animation"></div>
+    </div>
+
+    <!-- Floating Wallet Info - COMPACT VERSION -->
+    <div id="floating-wallet" class="floating-wallet hidden">
+        <div class="floating-wallet-content">
+            <div class="floating-wallet-header">
+                <i class="fas fa-wallet"></i>
+                <span>Wallet Connected</span>
+                <button class="floating-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="floating-wallet-details">
+                <div class="floating-wallet-item">
+                    <span class="floating-wallet-label">Address:</span>
+                    <span id="floating-wallet-address" class="floating-wallet-value">0x0000...0000</span>
+                </div>
+                <div class="floating-wallet-item">
+                    <span class="floating-wallet-label">Balance:</span>
+                    <span id="floating-wallet-balance" class="floating-wallet-value">0.00 TNC</span>
+                </div>
+                <div class="floating-wallet-item">
+                    <span class="floating-wallet-label">Network:</span>
+                    <span id="floating-wallet-network" class="floating-wallet-status">
+                        <i class="fas fa-check-circle"></i>
+                        Sepolia
+                    </span>
+                </div>
+                <div class="floating-wallet-actions">
+                    <button id="floating-copy-btn" class="btn btn-outline btn-small">
+                        <i class="far fa-copy"></i>
+                        Copy Address
+                    </button>
+                    <button id="floating-logout-btn" class="btn btn-danger btn-small">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <!-- HEADER -->
         <header class="header">
             <div class="header-content">
                 <div class="logo">
-                    <i class="fas fa-hand-holding-heart"></i>
-                    <h1>TinyCoin Donation</h1>
+                    <div class="logo-icon">
+                        <i class="fas fa-link"></i>
+                        <div class="logo-pulse"></div>
+                    </div>
+                    <div>
+                        <h1>DonationHub</h1>
+                        <p class="logo-subtitle">On-Chain Donation Platform</p>
+                    </div>
                 </div>
-                <div class="network-badge">
-                    <i class="fas fa-network-wired"></i>
-                    <span>Sepolia Testnet</span>
-                </div>
-            </div>
-        </header>
-
-        <!-- CONNECT WALLET SECTION -->
-        <section class="card" id="wallet-section">
-            <h2 class="section-title">
-                <i class="fas fa-wallet"></i>
-                Connect Wallet
-            </h2>
-            
-            <div class="wallet-container">
-                <button id="connect-btn" class="btn btn-primary">
-                    <i class="fas fa-plug"></i>
-                    Connect MetaMask
-                </button>
                 
-                <div id="wallet-info" class="wallet-info hidden">
-                    <div class="wallet-details">
-                        <div class="wallet-item">
-                            <span class="wallet-label">Address:</span>
-                            <span id="wallet-address" class="wallet-value">0x0000...0000</span>
-                            <div class="wallet-actions">
-                                <button class="copy-btn" id="copy-address" title="Copy address">
+                <div class="header-right">
+                    <!-- Wallet Connect di Header - VERSI COMPACT -->
+                    <div class="header-wallet" id="header-wallet">
+                        <!-- TOMBOL CONNECT (tampil saat belum connect) -->
+                        <button id="header-connect-btn" class="btn btn-primary btn-header">
+                            <i class="fas fa-plug"></i>
+                            Connect Wallet
+                        </button>
+                        
+                        <!-- INFO WALLET COMPACT (tampil saat sudah connect) -->
+                        <div id="header-wallet-info" class="header-wallet-info hidden">
+                            <!-- Bagian utama: Address + Balance -->
+                            <div class="header-wallet-main">
+                                <div class="header-wallet-address">
+                                    <i class="fas fa-wallet"></i>
+                                    <span id="header-wallet-address">0x0000...0000</span>
+                                </div>
+                                <div class="header-wallet-balance">
+                                    <i class="fas fa-coins"></i>
+                                    <span id="header-wallet-balance">0.00 TNC</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Tombol aksi - TAMBAHKAN LOGOUT BUTTON -->
+                            <div class="header-wallet-actions">
+                                <button class="header-copy-btn" id="header-copy-btn" title="Copy Address">
                                     <i class="far fa-copy"></i>
                                 </button>
-                                <button class="logout-btn" id="logout-btn" title="Disconnect wallet">
+                                <button class="header-logout-btn" id="header-logout-btn" title="Logout">
                                     <i class="fas fa-sign-out-alt"></i>
                                 </button>
                             </div>
                         </div>
-                        
-                        <div class="wallet-item">
-                            <span class="wallet-label">Network:</span>
-                            <span id="network-status" class="status-badge status-success">
-                                <i class="fas fa-check-circle"></i>
-                                Connected
-                            </span>
+                    </div>
+                    
+                    <div class="network-badge">
+                        <div class="network-dot"></div>
+                        <span>Sepolia Testnet</span>
+                    </div>
+                    
+                    <nav class="nav-links">
+                        <a href="#landing" class="nav-link active"><i class="fas fa-home"></i> Home</a>
+                        <a href="#campaigns-section" class="nav-link"><i class="fas fa-list"></i> Campaigns</a>
+                        <a href="#create-campaign-section" class="nav-link"><i class="fas fa-plus-circle"></i> Create</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- LANDING PAGE SECTION -->
+        <section id="landing" class="landing-section">
+            <div class="landing-content">
+                <div class="landing-text">
+                    <div class="landing-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Decentralized • Transparent • Secure</span>
+                    </div>
+                    <h2 class="landing-title">
+                        <span class="text-gradient">Donasi Terdesentralisasi</span>
+                        <br>Tanpa Perantara
+                    </h2>
+                    <p class="landing-description">
+                        DonationHub adalah cara sederhana untuk mencoba donasi berbasis blockchain. 
+                        <span class="highlight">Buat campaign, kirim donasi, dan lihat semuanya tercatat on-chain</span> — 
+                        tanpa perantara, transparan, dan aman.
+                    </p>
+                    
+                    <div class="landing-features">
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                            <h3>On-Chain</h3>
+                            <p>Setiap transaksi tercatat permanen di blockchain</p>
                         </div>
-                        
-                        <div class="wallet-item">
-                            <span class="wallet-label">TNC Balance:</span>
-                            <span id="tnc-balance" class="wallet-value balance">0.00 TNC</span>
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <h3>Tanpa Perantara</h3>
+                            <p>Donasi langsung ke penerima tanpa biaya tambahan</p>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <h3>Transparan</h3>
+                            <p>Semua donasi dapat diverifikasi publik</p>
+                        </div>
+                    </div>
+                    
+                    <div class="landing-cta">
+                        <a href="#campaigns-section" class="btn btn-primary btn-large">
+                            <i class="fas fa-heart"></i>
+                            Mulai Donasi Sekarang
+                        </a>
+                        <a href="#how-it-works" class="btn btn-outline">
+                            <i class="fas fa-play-circle"></i>
+                            Cara Kerja
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="landing-visual">
+                    <div class="blockchain-visual">
+                        <div class="blockchain-node">
+                            <i class="fas fa-user"></i>
+                            <span>Donatur</span>
+                        </div>
+                        <div class="blockchain-connector">
+                            <div class="connector-line"></div>
+                            <div class="connector-dots">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                        <div class="blockchain-node">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            <span>Campaign</span>
+                        </div>
+                        <div class="blockchain-connector">
+                            <div class="connector-line"></div>
+                            <div class="connector-dots">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                        <div class="blockchain-node">
+                            <i class="fas fa-users"></i>
+                            <span>Penerima</span>
+                        </div>
+                    </div>
+                    <div class="landing-stats">
+                        <div class="stat">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">On-Chain</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">0%</span>
+                            <span class="stat-label">Biaya Perantara</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">∞</span>
+                            <span class="stat-label">Transparansi</span>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- CREATE CAMPAIGN SECTION -->
-        <section class="card" id="create-campaign-section">
+        <!-- HOW IT WORKS SECTION -->
+        <section id="how-it-works" class="section-card">
             <h2 class="section-title">
-                <i class="fas fa-plus-circle"></i>
-                Create Campaign
+                <i class="fas fa-sitemap"></i>
+                <span class="text-gradient">Cara Kerja DonationHub</span>
             </h2>
             
-            <form id="create-campaign-form">
-                <div class="form-group">
-                    <label for="campaign-title">
-                        <i class="fas fa-heading"></i>
-                        Judul Campaign
-                    </label>
-                    <input 
-                        type="text" 
-                        id="campaign-title" 
-                        placeholder="Contoh: Bantu Pendidikan Anak Yatim"
-                        required
-                    >
-                </div>
-                
-                <div class="form-group">
-                    <label for="recipient-address">
-                        <i class="fas fa-user-circle"></i>
-                        Alamat Penerima (0x...)
-                    </label>
-                    <input 
-                        type="text" 
-                        id="recipient-address" 
-                        placeholder="0x742d35Cc6634C0532925a3b844Bc9e..."
-                        required
-                    >
-                </div>
-                
-                <div class="info-box">
-                    <i class="fas fa-info-circle"></i>
-                    <span>Creation Fee: <strong>1 TNC</strong></span>
-                </div>
-                
-                <div class="button-group">
-                    <button type="submit" id="create-campaign-btn" class="btn btn-primary" disabled>
-                        <i class="fas fa-rocket"></i>
-                        Create Campaign
-                    </button>
-                </div>
-                
-                <div id="create-status" class="status-box hidden">
-                    <div class="status-content">
-                        <span id="create-status-text">Status akan muncul di sini...</span>
-                        <a id="create-tx-link" href="#" target="_blank" class="hidden">
-                            <i class="fas fa-external-link-alt"></i>
-                            View on Explorer
-                        </a>
+            <div class="workflow-grid">
+                <div class="workflow-column">
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Connect Wallet</h3>
+                            <p>Hubungkan wallet MetaMask Anda ke jaringan Sepolia Testnet</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Pilih Campaign</h3>
+                            <p>Pilih campaign yang ingin Anda dukung dari daftar yang tersedia</p>
+                        </div>
                     </div>
                 </div>
-            </form>
+                <div class="workflow-column">
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Donasi TNC Token</h3>
+                            <p>Kirim donasi menggunakan TNC token dengan satu klik</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Transaksi Tercatat On-Chain</h3>
+                            <p>Lihat transaksi Anda tercatat permanen di blockchain Sepolia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <!-- CAMPAIGNS LIST SECTION -->
-        <section class="card" id="campaigns-section">
+        <!-- DAPP SECTION -->
+        <section id="app" class="dapp-section">
             <div class="section-header">
                 <h2 class="section-title">
-                    <i class="fas fa-list"></i>
-                    Daftar Campaign
+                    <i class="fas fa-cube"></i>
+                    <span class="text-gradient">DonationHub dApp</span>
                 </h2>
-                <button id="refresh-campaigns-btn" class="btn btn-secondary" disabled>
-                    <i class="fas fa-sync-alt"></i>
-                    Refresh
-                </button>
-            </div>
-            
-            <div id="campaigns-container" class="campaigns-container">
-                <div class="placeholder-text">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <p>Silakan connect MetaMask untuk memuat campaign.</p>
+                <div class="dapp-badge">
+                    <i class="fas fa-bolt"></i>
+                    <span>Powered by Ethereum Smart Contracts</span>
                 </div>
             </div>
-        </section>
 
-        <!-- DONATE SECTION (SIMPLE VERSION - ONE-CLICK) -->
-        <section class="card" id="donate-section">
-            <h2 class="section-title">
-                <i class="fas fa-donate"></i>
-                Donate
-            </h2>
-            
-            <form id="donate-form">
-                <div class="form-group">
-                    <label for="selected-campaign">
-                        <i class="fas fa-hand-point-right"></i>
-                        Campaign Terpilih
-                    </label>
-                    <div id="selected-campaign-display" class="selected-campaign">
-                        <span id="selected-campaign-text">Klik "Donate" pada campaign di daftar</span>
+            <!-- CREATE CAMPAIGN SECTION -->
+            <section class="card glass-card" id="create-campaign-section">
+                <h2 class="section-title">
+                    <i class="fas fa-plus-circle"></i>
+                    Create Campaign
+                </h2>
+                
+                <form id="create-campaign-form">
+                    <div class="form-group">
+                        <label for="campaign-title" class="form-label">
+                            <i class="fas fa-heading"></i>
+                            Judul Campaign
+                        </label>
+                        <input 
+                            type="text" 
+                            id="campaign-title" 
+                            placeholder="Contoh: Bantu Pendidikan Anak Yatim"
+                            class="form-input crypto-input"
+                            required
+                        >
                     </div>
-                    <input type="hidden" id="selected-campaign-id" value="">
-                </div>
-                
-                <div class="form-group">
-                    <label for="donation-amount">
-                        <i class="fas fa-coins"></i>
-                        Jumlah Donasi (TNC)
-                    </label>
-                    <input 
-                        type="number" 
-                        id="donation-amount" 
-                        placeholder="Masukkan jumlah TNC"
-                        min="0.1"
-                        step="0.1"
-                        required
-                        disabled
-                    >
-                </div>
-                
-                <div class="button-group">
-                    <button type="submit" id="donate-btn" class="btn btn-success" disabled>
-                        <i class="fas fa-heart"></i>
-                        Donate Sekarang
+                    
+                    <div class="form-group">
+                        <label for="recipient-address" class="form-label">
+                            <i class="fas fa-user-circle"></i>
+                            Alamat Penerima (0x...)
+                        </label>
+                        <input 
+                            type="text" 
+                            id="recipient-address" 
+                            placeholder="0x742d35Cc6634C0532925a3b844Bc9e..."
+                            class="form-input crypto-input"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="info-box crypto-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Creation Fee: <strong class="crypto-text">1 TNC</strong> (Biaya)</span>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" id="create-campaign-btn" class="btn btn-primary btn-crypto" disabled>
+                            <i class="fas fa-rocket"></i>
+                            Create Campaign
+                        </button>
+                    </div>
+                    
+                    <div id="create-status" class="status-box hidden">
+                        <div class="status-content">
+                            <span id="create-status-text">Status akan muncul di sini...</span>
+                            <a id="create-tx-link" href="#" target="_blank" class="crypto-link hidden">
+                                <i class="fas fa-external-link-alt"></i>
+                                View on Explorer
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <!-- CAMPAIGNS LIST SECTION -->
+            <section class="card glass-card" id="campaigns-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-list"></i>
+                        Daftar Campaign
+                    </h2>
+                    <button id="refresh-campaigns-btn" class="btn btn-secondary crypto-btn" disabled>
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
                     </button>
                 </div>
                 
-                <div id="donate-status" class="status-box hidden">
-                    <div class="status-content">
-                        <span id="donate-status-text">Status akan muncul di sini...</span>
-                        <a id="donate-tx-link" href="#" target="_blank" class="hidden">
-                            <i class="fas fa-external-link-alt"></i>
-                            View on Explorer
-                        </a>
+                <div id="campaigns-container" class="campaigns-container">
+                    <div class="placeholder-text">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Silakan connect MetaMask untuk memuat campaign.</p>
                     </div>
                 </div>
-            </form>
+            </section>
+
+            <!-- DONATE SECTION -->
+            <section class="card glass-card" id="donate-section">
+                <h2 class="section-title">
+                    <i class="fas fa-donate"></i>
+                    Donate
+                </h2>
+                
+                <form id="donate-form">
+                    <div class="form-group">
+                        <label for="selected-campaign" class="form-label">
+                            <i class="fas fa-hand-point-right"></i>
+                            Campaign Terpilih
+                        </label>
+                        <div id="selected-campaign-display" class="selected-campaign crypto-display">
+                            <span id="selected-campaign-text">Klik "Donate" pada campaign di daftar</span>
+                        </div>
+                        <input type="hidden" id="selected-campaign-id" value="">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="donation-amount" class="form-label">
+                            <i class="fas fa-coins"></i>
+                            Jumlah Donasi (TNC)
+                        </label>
+                        <input 
+                            type="number" 
+                            id="donation-amount" 
+                            placeholder="Masukkan jumlah TNC"
+                            class="form-input crypto-input"
+                            min="0.1"
+                            step="0.1"
+                            required
+                            disabled
+                        >
+                        <div class="input-hint">Minimal donasi: 0.1 TNC</div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" id="donate-btn" class="btn btn-success btn-crypto" disabled>
+                            <i class="fas fa-heart"></i>
+                            Donate Sekarang
+                        </button>
+                    </div>
+                    
+                    <div id="donate-status" class="status-box hidden">
+                        <div class="status-content">
+                            <span id="donate-status-text">Status akan muncul di sini...</span>
+                            <a id="donate-tx-link" href="#" target="_blank" class="crypto-link hidden">
+                                <i class="fas fa-external-link-alt"></i>
+                                View on Explorer
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </section>
         </section>
 
         <!-- FOOTER -->
         <footer class="footer">
-            <p>
-                <i class="fas fa-info-circle"></i>
-                Testnet Sepolia – hanya untuk simulasi
-            </p>
-            <p class="footer-note">
-                dApp demonstrasi untuk praktikum blockchain. Token TNC adalah ERC20 di jaringan Sepolia.
-            </p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-link"></i>
+                        <h3>DonationHub</h3>
+                    </div>
+                    <p class="footer-description">
+                        Platform donasi terdesentralisasi berbasis blockchain Ethereum.
+                        Transparan, aman, dan tanpa perantara.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Jaringan</h4>
+                    <p><i class="fas fa-network-wired"></i> Sepolia Testnet</p>
+                    <p><i class="fas fa-coins"></i> TNC Token (ERC-20)</p>
+                    <p><i class="fas fa-shield-alt"></i> Smart Contract Verified</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Links</h4>
+                    <a href="#landing"><i class="fas fa-home"></i> Home</a>
+                    <a href="#campaigns-section"><i class="fas fa-list"></i> Campaigns</a>
+                    <a href="#create-campaign-section"><i class="fas fa-plus-circle"></i> Create</a>
+                    <a href="https://sepolia.etherscan.io" target="_blank"><i class="fas fa-external-link-alt"></i> Block Explorer</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>
+                    <i class="fas fa-info-circle"></i>
+                    Testnet Sepolia – hanya untuk simulasi dan pengembangan
+                </p>
+                <p class="footer-note">
+                    dApp demonstrasi untuk praktikum blockchain. Token TNC adalah ERC20 di jaringan Sepolia.
+                </p>
+            </div>
         </footer>
     </div>
 
@@ -227,5 +487,6 @@
     <!-- JavaScript Files -->
     <script src="config.js"></script>
     <script src="app.js"></script>
+    <script src="landing.js"></script>
 </body>
 </html>
